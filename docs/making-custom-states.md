@@ -6,6 +6,7 @@ credits: FranTheSylveon
 
 # Custom States
 
+## Basic Setup
 For make Custom States in ALE Psych, go to `mods/<mod>/scipts/states`.
 
 You have 2 options for this: Replacing the original ones typing like `TitleState.hx, MainMenuState.hx, etc`
@@ -14,6 +15,7 @@ or making new one without replacing.
 in this case we gonna replace MainMenuState.hx because its more easier lmao, and we gonna make to put a image for example.
 and for the image in the modfolder you need to create a new folder called "images" and put a random image that you want to show.
 
+## Coding
 As you can see all here is blank but because we dont add the image and the code.
 ![](/images/custom-states/before.webp)
 
