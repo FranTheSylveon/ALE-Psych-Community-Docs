@@ -1,6 +1,7 @@
 ---
 title: Custom States
 description: How Make Your Own Scripteable And Custom States.
+credits: FranTheSylveon
 ---
 
 # Custom States
@@ -41,3 +42,4 @@ function postUpdate(elapsed:Float)
 For the switchState if you want another different state just change the part of freeplayState and replace it with: `mainMenuState, initialState, optionsState`
 
 And thats all folks ;3.
+
