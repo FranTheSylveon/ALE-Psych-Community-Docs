@@ -33,109 +33,116 @@ const props = defineProps<{
 
 const presets: Record<StatusKey, StatusPreset> = {
   'rapidly-changing': {
-    icon: '↻',
-    color: '#d97706',
+    icon: '\u21bb',
+    color: '#838d86',
     title: 'Rapidly Changing',
     description: 'This page is being updated often and may shift without much notice.'
   },
   'newly-added': {
-    icon: '✦',
-    color: '#2563eb',
+    icon: '\u2726',
+    color: '#5a74d6',
     title: 'Newly Added',
     description: 'This documentation is new and may still be expanding.'
   },
   'under-review': {
-    icon: '⌕',
-    color: '#7c3aed',
+    icon: '\u2315',
+    color: '#7b5edb',
     title: 'Under Review',
     description: 'This page is being checked for accuracy and may change soon.'
   },
   'needs-verification': {
-    icon: '!',
-    color: '#dc2626',
+    icon: '\u26a0',
+    color: '#fa005a',
     title: 'Needs Verification',
     description: 'This information should be confirmed against the source or runtime behavior.'
   },
   'version-specific': {
     icon: 'v',
-    color: '#0891b2',
+    color: '#86d7dc',
     title: 'Version-Specific',
     description: 'This note applies only to a particular engine version or release line.'
   },
   'unstable-api': {
-    icon: '⚗',
-    color: '#c2410c',
+    icon: '\u2697',
+    color: '#ff7f26',
     title: 'Unstable API',
     description: 'The underlying API is still shifting and may not stay compatible.'
   },
   'breaking-change': {
-    icon: '✕',
-    color: '#e11d48',
+    icon: '\u2716',
+    color: '#fa005a',
     title: 'Breaking Change',
     description: 'This behavior differs from older versions in a way that can break existing content.'
   },
   'partial-documentation': {
-    icon: '◫',
-    color: '#64748b',
+    icon: '\u25eb',
+    color: '#7f8a96',
     title: 'Partial Documentation',
     description: 'Only part of this topic is documented right now.'
   },
   'missing-examples': {
     icon: '{}',
-    color: '#0f766e',
+    color: '#5fb39a',
     title: 'Missing Examples',
     description: 'This page needs practical examples before it is fully useful.'
   },
   legacy: {
-    icon: '◔',
-    color: '#6b7280',
+    icon: '\u25d4',
+    color: '#7a7a7a',
     title: 'Legacy',
     description: 'This content describes older behavior that is still worth keeping around.'
   },
   'scheduled-for-removal': {
-    icon: '⏳',
-    color: '#f59e0b',
+    icon: '\u23f3',
+    color: '#ffc500',
     title: 'Scheduled for Removal',
     description: 'This feature or page is planned to go away in a future update.'
   },
   'known-issue': {
-    icon: '⚠',
-    color: '#b91c1c',
+    icon: '\u26a0',
+    color: '#fa005a',
     title: 'Known Issue',
     description: 'There is a confirmed problem here that readers should be aware of.'
   },
   archived: {
-    icon: '⌁',
-    color: '#475569',
+    icon: '\u2301',
+    color: '#838d86',
     title: 'Archived',
     description: 'This page is kept for reference and is no longer actively maintained.'
   }
 }
 
 const preset = computed(() => presets[props.status])
-
 const noticeTitle = computed(() => props.title ?? preset.value.title)
 const noticeDescription = computed(() => props.description ?? preset.value.description)
+const separatorColor = computed(() => preset.value.color)
 </script>
 
 <template>
-  <aside class="status-notice" :style="{ '--notice-accent': preset.color }">
-    <div class="icon" aria-hidden="true">
-      {{ preset.icon }}
+  <aside
+    class="status-notice"
+    :class="`status-notice--${status}`"
+    :style="{ '--notice-separator': separatorColor }"
+  >
+    <div class="status-notice__icon" aria-hidden="true">
+      <span>{{ preset.icon }}</span>
     </div>
 
-    <div class="content">
-      <div class="heading-row">
-        <h3 class="title">{{ noticeTitle }}</h3>
-        <div class="meta">
-          <span v-if="version" class="chip">Version {{ version }}</span>
-          <span v-if="reason" class="chip reason">{{ reason }}</span>
-        </div>
+    <div class="status-notice__body">
+      <div class="status-notice__title-row">
+        <b class="status-notice__title">{{ noticeTitle }}</b>
+        <span class="status-notice__meta">
+          <span v-if="version">Version {{ version }}</span>
+          <span v-if="version && reason">·</span>
+          <span v-if="reason">{{ reason }}</span>
+        </span>
       </div>
 
-      <p class="description">
+      <div class="status-notice__rule" aria-hidden="true" />
+
+      <div class="status-notice__text">
         {{ noticeDescription }}
-      </p>
+      </div>
     </div>
   </aside>
 </template>
@@ -144,84 +151,95 @@ const noticeDescription = computed(() => props.description ?? preset.value.descr
 .status-notice {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1rem 1.1rem;
-  border: 1px solid color-mix(in srgb, var(--notice-accent) 28%, var(--vp-c-divider));
+  gap: 16px;
+  width: 100%;
+  padding: 8px 16px;
+  margin: 1rem 0 0.25rem;
+  box-sizing: border-box;
+  background: #7b7b7b3b;
+  border: 1px solid color-mix(in srgb, var(--notice-separator) 30%, transparent);
   border-left-width: 6px;
-  border-radius: 16px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--notice-accent) 10%, transparent), transparent 75%),
-    var(--vp-c-bg-soft);
-  box-shadow: 0 8px 24px rgb(15 23 42 / 0.04);
+  border-radius: 0;
+  font-size: 16px;
+  line-height: 160%;
 }
 
-.icon {
+.status-notice__icon {
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 40px;
+  min-width: 40px;
+  align-self: start;
+  padding-top: 2px;
+  text-align: center;
+}
+
+.status-notice__icon span {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
-  background: var(--notice-accent);
-  color: white;
-  font-size: 1.15rem;
+  background: color-mix(in srgb, var(--notice-separator) 18%, white);
+  color: #222;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1;
 }
 
-.content {
+.status-notice__body {
   min-width: 0;
 }
 
-.heading-row {
+.status-notice__title-row {
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
-  justify-content: space-between;
-  gap: 0.75rem;
+  align-items: baseline;
+  gap: 8px;
 }
 
-.title {
-  margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.2;
+.status-notice__title {
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-.meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.chip {
+.status-notice__meta {
   display: inline-flex;
-  align-items: center;
-  padding: 0.24rem 0.5rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--notice-accent) 12%, transparent);
+  flex-wrap: wrap;
+  gap: 0.35rem;
   color: var(--vp-c-text-2);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.chip.reason {
-  background: color-mix(in srgb, var(--notice-accent) 18%, transparent);
+.status-notice__rule {
+  width: min(200px, 100%);
+  height: 4px;
+  margin-top: 8px;
+  background: var(--notice-separator);
 }
 
-.description {
-  margin: 0.45rem 0 0;
-  color: var(--vp-c-text-2);
-  line-height: 1.55;
+.status-notice__text {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 @media (max-width: 640px) {
   .status-notice {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 8px 12px;
   }
 
-  .icon {
-    width: 2.25rem;
-    height: 2.25rem;
+  .status-notice__icon,
+  .status-notice__icon span {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .status-notice__rule {
+    width: 100%;
   }
 }
 </style>
