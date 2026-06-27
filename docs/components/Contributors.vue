@@ -37,9 +37,8 @@ onMounted(async () => {
 
 <template>
   <section class="contributors">
-    <p class="intro">
-      Live from GitHub. This list updates automatically from the repository contributors API.
-    </p>
+    <h2>Contributors</h2>
+    <p class="intro">Live from GitHub. This list updates automatically from the repository contributors API.</p>
 
     <p v-if="loading" class="status">Loading contributors...</p>
     <p v-else-if="error" class="status error">

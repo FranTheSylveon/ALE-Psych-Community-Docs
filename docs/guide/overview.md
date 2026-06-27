@@ -1,7 +1,15 @@
 ---
 title: Overview
 description: Overview of ALE Psych Community Docs.
+credits:
+  - label: Page
+    name: ALE Psych Community Docs
+    note: Overview page for the community-maintained docs site.
 ---
+
+<script setup>
+import PageCredits from '../components/PageCredits.vue'
+</script>
 
 # Overview
 
@@ -16,3 +24,4 @@ It is separate from the creator's existing documentation and is intended to stay
 - Sidebar navigation for the site structure
 - Edit links on pages so fixes stay simple
 
+<PageCredits />

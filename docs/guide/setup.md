@@ -1,7 +1,15 @@
 ---
 title: Setup
 description: Getting started with the docs site structure.
+credits:
+  - label: Page
+    name: ALE Psych Community Docs
+    note: Setup notes for the docs site itself.
 ---
+
+<script setup>
+import PageCredits from '../components/PageCredits.vue'
+</script>
 
 # Setup
 
@@ -13,3 +21,4 @@ If you spot an issue, use the page edit link in the footer to open the matching 
 
 This repository is already configured for Vercel with the docs build output set to `docs/.vitepress/dist`.
 
+<PageCredits />
