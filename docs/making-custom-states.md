@@ -1,43 +1,73 @@
 ---
 title: Custom States
-description: How Make Your Own Scripteable And Custom States.
+description: How to create and use custom states in ALE Psych.
 ---
 
 # Custom States
 
-For make Custom States in ALE Psych, go to `mods/<mod>/scipts/states`.
+ALE Psych can load custom states from `mods/<mod>/scripts/states`.
 
-You have 2 options for this: Replacing the original ones typing like `TitleState.hx, MainMenuState.hx, etc`
-or making new one without replacing.
+You usually have two ways to use them:
 
-in this case we gonna replace MainMenuState.hx because its more easier lmao, and we gonna make to put a image for example.
-and for the image in the modfolder you need to create a new folder called "images" and put a random image that you want to show.
+- replace an existing state, such as `TitleState`, `MainMenuState`, or `FreeplayState`
+- create a brand-new state and switch to it from another script
 
-As you can see all here is blank but because we dont add the image and the code.
-![](https://drive.google.com/u/0/drive-viewer/AKGpiha78jVkWGyU0Wu7V5d4UTVP2rOMhQJSCMh8HqcNFnRfP_diT0-rCp50pT1irAYU6RcYwWtMHDeeKSdZ26K9KHk4b1KhMkjyvQ=s1600-rw-v1?auditContext=forDisplay)
+## Basic Setup
 
-So lets put this in the code.
-```haxe
-var imagelol:FlxSprite = new FlxSprite(300, 60).loadGraphic(Paths.image('thenameoftheimageanddontputdotpng'));
-add(imagelol);
+Create a new Haxe script in the states folder for your mod.
+
+Example:
+
+```text
+mods/<mod>/scripts/states/CustomState.hx
 ```
-yeah, thats all the code you need to put.
 
-And now we hace a silly image here!.
-![](https://drive.google.com/u/0/drive-viewer/AKGpihZlD37-_k4ll2Nyh_EoirLf_1TefRgbS9YBhizcav9bNsxzpadtzCGh80PpePa61uX2VMJe33bg3iSgA0vmnlNl-kYhvst2HA=s1600-rw-v1?auditContext=forDisplay)
+Inside that file, define your state class and add whatever UI or logic you need.
 
-And if you want to change a another state like freeplay just put this code below the imagelol thing.
+## Example State
+
 ```haxe
-function postUpdate(elapsed:Float)
+class CustomState extends MusicBeatState
 {
-    if(Controls.ACCEPT)
+    override function create()
     {
-        CoolUtil.switchState(new CustomState(CoolVars.data.freeplayState));
+        super.create();
+
+        var bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+        add(bg);
+
+        var label = new FlxText(0, 0, FlxG.width, "Custom State");
+        label.setFormat(null, 32, FlxColor.WHITE, "center");
+        label.screenCenter();
+        add(label);
     }
-        
 }
 ```
 
-For the switchState if you want another different state just change the part of freeplayState and replace it with: `mainMenuState, initialState, optionsState`
+## Switching To It
 
-And thats all folks ;3.
+From another state or script, switch to your custom state when needed.
+
+```haxe
+if (controls.ACCEPT)
+{
+    CoolUtil.switchState(new CustomState());
+}
+```
+
+## Replacing An Existing State
+
+If you want to replace an engine state instead of adding a new one, use the same filename and class name as the original state you want to override.
+
+For example:
+
+- `TitleState`
+- `MainMenuState`
+- `FreeplayState`
+- `OptionsState`
+
+## Notes
+
+- Keep the class name and file name aligned.
+- Put shared assets in your mod's `images` folder if your state loads custom graphics.
+- If you only need a menu entry or option, consider whether a custom state is the right tool first.
