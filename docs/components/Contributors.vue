@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 type Contributor = {
   login: string
   avatar_url: string
   html_url: string
-  contributions: number
 }
 
 const repoApi = 'https://api.github.com/repos/ALE-Psych-Crew/ALE-Psych-Community-Docs/contributors?per_page=100&anon=1'
@@ -13,6 +12,19 @@ const repoApi = 'https://api.github.com/repos/ALE-Psych-Crew/ALE-Psych-Community
 const contributors = ref<Contributor[]>([])
 const loading = ref(true)
 const error = ref('')
+
+const uniqueContributors = computed(() => {
+  const seen = new Set<string>()
+
+  return contributors.value.filter((contributor) => {
+    if (seen.has(contributor.login)) {
+      return false
+    }
+
+    seen.add(contributor.login)
+    return true
+  })
+})
 
 onMounted(async () => {
   try {
@@ -26,7 +38,10 @@ onMounted(async () => {
       throw new Error(`GitHub API returned ${response.status}`)
     }
 
-    contributors.value = await response.json()
+    const data = (await response.json()) as Contributor[]
+    contributors.value = data.filter((contributor, index, list) => {
+      return list.findIndex((item) => item.login === contributor.login) === index
+    })
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load contributors.'
   } finally {
@@ -37,17 +52,12 @@ onMounted(async () => {
 
 <template>
   <section class="contributors">
-    <h2>Contributors</h2>
-    <p class="intro">Live from GitHub. This list updates automatically from the repository contributors API.</p>
-
     <p v-if="loading" class="status">Loading contributors...</p>
-    <p v-else-if="error" class="status error">
-      Could not load contributors: {{ error }}
-    </p>
+    <p v-else-if="error" class="status error">Could not load contributors: {{ error }}</p>
 
     <div v-else class="grid">
       <a
-        v-for="contributor in contributors"
+        v-for="contributor in uniqueContributors"
         :key="contributor.login"
         class="card"
         :href="contributor.html_url"
@@ -61,10 +71,7 @@ onMounted(async () => {
           width="40"
           height="40"
         >
-        <div class="meta">
-          <div class="login">{{ contributor.login }}</div>
-          <div class="count">{{ contributor.contributions }} contribution{{ contributor.contributions === 1 ? '' : 's' }}</div>
-        </div>
+        <div class="login">{{ contributor.login }}</div>
       </a>
     </div>
   </section>
@@ -75,12 +82,6 @@ onMounted(async () => {
   margin-top: 2rem;
   padding-top: 1rem;
   border-top: 1px solid var(--vp-c-divider);
-}
-
-.intro {
-  margin: 0 0 1rem;
-  color: var(--vp-c-text-2);
-  font-size: 0.95rem;
 }
 
 .status {
@@ -94,8 +95,14 @@ onMounted(async () => {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card {
@@ -124,18 +131,9 @@ onMounted(async () => {
   border-radius: 999px;
 }
 
-.meta {
-  min-width: 0;
-}
-
 .login {
   font-weight: 600;
   line-height: 1.2;
   word-break: break-word;
-}
-
-.count {
-  color: var(--vp-c-text-2);
-  font-size: 0.9rem;
 }
 </style>

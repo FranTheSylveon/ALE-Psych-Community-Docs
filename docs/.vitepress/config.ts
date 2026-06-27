@@ -11,26 +11,9 @@ export default defineConfig({
     siteTitle: 'ALE Psych Community Docs',
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/overview' },
-      { text: 'Reference', link: '/reference/navigation' },
       { text: 'GitHub', link: repoUrl }
     ],
-    sidebar: [
-      {
-        text: 'Guide',
-        items: [
-          { text: 'Home', link: '/' },
-          { text: 'Overview', link: '/guide/overview' },
-          { text: 'Setup', link: '/guide/setup' }
-        ]
-      },
-      {
-        text: 'Reference',
-        items: [
-          { text: 'Navigation', link: '/reference/navigation' }
-        ]
-      }
-    ],
+    sidebar: [{ text: 'Home', items: [{ text: 'Home', link: '/' }] }],
     search: {
       provider: 'local'
     },
