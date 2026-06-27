@@ -18,5 +18,3 @@ Community-maintained docs for ALE Psych Engine 5, organized by topic.
 ## What this is for
 
 Use this site for practical modding notes, source-driven references, and a place to keep engine-specific documentation together.
-
-<Contributors />

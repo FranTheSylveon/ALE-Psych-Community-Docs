@@ -10,43 +10,20 @@ export default defineConfig({
   themeConfig: {
     siteTitle: 'ALE Psych Community Docs',
     nav: [
-      { text: 'Home', link: '/' },
-      {
-        text: 'Guides',
-        items: [
-          { text: 'Overview', link: '/overview' },
-          { text: 'Custom Settings', link: '/adding-custom-settings' },
-          { text: 'Custom States', link: '/making-custom-states' }
-        ]
-      },
-      {
-        text: 'Reference',
-        items: [{ text: 'Status Notices', link: '/status-notices' }]
-      },
+      { text: 'Overview', link: '/overview' },
+      { text: 'Custom Settings', link: '/adding-custom-settings' },
+      { text: 'Custom States', link: '/making-custom-states' },
+      { text: 'Status Notices', link: '/status-notices' },
       { text: 'GitHub', link: repoUrl }
     ],
-    sidebar: [
-      {
-        text: 'Start Here',
-        items: [
-          { text: 'Home', link: '/' },
-          { text: 'Overview', link: '/overview' }
-        ]
-      },
-      {
-        text: 'Modding Guides',
-        items: [
-          { text: 'Custom Settings', link: '/adding-custom-settings' },
-          { text: 'Custom States', link: '/making-custom-states' }
-        ]
-      },
-      {
-        text: 'Reference',
-        items: [
-          { text: 'Status Notices', link: '/status-notices' }
-        ]
-      }
-    ],
+    sidebar: {
+      '/': [
+        { text: 'Overview', link: '/overview' },
+        { text: 'Custom Settings', link: '/adding-custom-settings' },
+        { text: 'Custom States', link: '/making-custom-states' },
+        { text: 'Status Notices', link: '/status-notices' }
+      ]
+    },
     search: {
       provider: 'local'
     },
